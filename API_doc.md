@@ -1,6 +1,6 @@
 # Methods
 
-## /find
+## /findone
 ### Basic body parameters :
 * database
 * database-name
