@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_restful import Api, Resource, reqparse
 
 import databases.MongoDB as mongodb
@@ -154,7 +154,7 @@ api.add_resource(Delete, '/delete')
 
 @app.route('/welcome')
 def hello():
-    return 'Hello, World!'
+    return render_template('welcome.html')
 
 
 if __name__ == '__main__':
