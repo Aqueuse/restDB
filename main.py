@@ -9,7 +9,6 @@ app = Flask(__name__)
 @app.route('/findone', methods=['POST'])
 def findone():
     if not is_authorized(request.remote_addr):
-        blacklist_ip(request.remote_addr)
         return "Null"
 
     database_arguments = {
@@ -37,7 +36,6 @@ def findone():
 @app.route('/findall', methods=['POST'])
 def findall():
     if not is_authorized(request.remote_addr):
-        blacklist_ip(request.remote_addr)
         return "Null"
 
     database_arguments = {
@@ -65,7 +63,6 @@ def findall():
 @app.route('/append', methods=['POST'])
 def append():
     if not is_authorized(request.remote_addr):
-        blacklist_ip(request.remote_addr)
         return "Null"
 
     database_arguments = {
@@ -93,7 +90,6 @@ def append():
 @app.route('/update', methods=['POST'])
 def update():
     if not is_authorized(request.remote_addr):
-        blacklist_ip(request.remote_addr)
         return "Null"
 
     database_arguments = {
@@ -123,7 +119,6 @@ def update():
 @app.route('/delete', methods=['POST'])
 def delete():
     if not is_authorized(request.remote_addr):
-        blacklist_ip(request.remote_addr)
         return "Null"
 
     database_arguments = {
@@ -150,6 +145,8 @@ def delete():
 
 @app.route('/welcome', methods=['GET'])
 def welcome():
+    if not is_authorized(request.remote_addr):
+        return "Null"
     return render_template('welcome.html')
 
 
