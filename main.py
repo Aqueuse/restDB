@@ -1,159 +1,155 @@
-from flask import Flask, render_template
-from flask_restful import Api, Resource, reqparse
+from flask import Flask, render_template, request
 
 import databases.MongoDB as mongodb
+from security.security import is_authorized, blacklist_ip
 
 app = Flask(__name__)
-api = Api(app)
-
-parser = reqparse.RequestParser()
 
 
-class FindOne(Resource):
-    @staticmethod
-    def post():
-        parser.add_argument('database', type=str, location='form')
-        parser.add_argument('database-name', type=str, location='form')
-        parser.add_argument("mongo-collection", type=str, location='form')
-        parser.add_argument('mongo-filter', type=str, location='form')
-        args = parser.parse_args()
+@app.route('/findone', methods=['POST'])
+def findone():
+    if not is_authorized(request.remote_addr):
+        blacklist_ip(request.remote_addr)
+        return "Null"
 
-        database_arguments = {
-            "database_arg": args.get("database"),
-            "database_name_arg": args.get("database-name"),
-            "mongo_collection_arg": args.get("mongo-collection"),
-            "mongo_filter_arg": args.get("mongo-filter")
-        }
+    database_arguments = {
+        "database": request.form['database'],
+        "database-name": request.form['database-name'],
+        "mongo-collection": request.form['mongo-collection'],
+        "mongo-filter": request.form['mongo-filter']
+    }
 
-        for key, value in database_arguments.items():
-            if value == "None":
-                return "POST parameter " + key + " is missing"
+    for key, value in database_arguments.items():
+        if value == "None":
+            return "POST parameter " + key + " is missing"
 
-        if database_arguments["database_arg"] == "mongodb":
-            result = mongodb.find_one_in_collection(
-                database_arguments["database_name_arg"],
-                database_arguments["mongo_collection_arg"],
-                database_arguments["mongo_filter_arg"]
-            )
-            return "{'result':"+str(result)+"}"
-        else:
-            return "{'result':'database not recognized'}"
+    if database_arguments["database"] == "mongodb":
+        result = mongodb.find_one_in_collection(
+            database_arguments["database-name"],
+            database_arguments["mongo-collection"],
+            database_arguments["mongo-filter"]
+        )
+        return "{'result':"+str(result)+"}"
+    else:
+        return "{'result':'database not recognized'}"
 
 
-class FindAll(Resource):
-    @staticmethod
-    def post():
-        parser.add_argument('database', type=str, location='form')
-        parser.add_argument('database-name', type=str, location='form')
-        parser.add_argument('mongo-collection', type=str, location='form')
-        parser.add_argument('mongo-filter', type=str, location='form')
-        args = parser.parse_args()
+@app.route('/findall', methods=['POST'])
+def findall():
+    if not is_authorized(request.remote_addr):
+        blacklist_ip(request.remote_addr)
+        return "Null"
 
-        database_arguments = {
-            "database_arg": args.get("database"),
-            "database_name_arg": args.get("database-name"),
-            "mongo_collection_arg": args.get("mongo-collection"),
-            "mongo_filter_arg": args.get("mongo-filter")
-        }
+    database_arguments = {
+        "database": request.form['database'],
+        "database-name": request.form['database-name'],
+        "mongo-collection": request.form['mongo-collection'],
+        "mongo-filter": request.form['mongo-filter']
+    }
 
-        for key, value in database_arguments.items():
-            if value == "None":
-                return "POST parameter " + key + " is missing"
+    for key, value in database_arguments.items():
+        if value == "None":
+            return "POST parameter " + key + " is missing"
 
-        if database_arguments["database_arg"] == "mongodb":
-            result = mongodb.find_one_in_collection(
-                database_arguments["database_name_arg"],
-                database_arguments["mongo_collection_arg"],
-                database_arguments["mongo_filter_arg"]
-            )
-            return "{'result':" + str(result) + "}"
-        else:
-            return "{'result':'database not recognized'}"
+    if database_arguments["database"] == "mongodb":
+        result = mongodb.find_all_in_collection(
+            database_arguments["database-name"],
+            database_arguments["mongo-collection"],
+            database_arguments["mongo-filter"]
+        )
+        return "{'result':"+str(result)+"}"
+    else:
+        return "{'result':'database not recognized'}"
 
 
-class Append(Resource):
-    @staticmethod
-    def post():
-        parser.add_argument('database', type=str, location='form')
-        parser.add_argument('database-name', type=str, location='form')
-        parser.add_argument('mongo-collection', type=str, location='form')
-        parser.add_argument('mongo-document', type=str, location='form')
-        args = parser.parse_args()
+@app.route('/append', methods=['POST'])
+def append():
+    if not is_authorized(request.remote_addr):
+        blacklist_ip(request.remote_addr)
+        return "Null"
 
-        database_arguments = {
-            "database_arg": args.get("database"),
-            "database_name_arg": args.get("database-name"),
-            "mongo_collection_arg": args.get("mongo-collection"),
-            "mongo_document_arg": args.get("mongo-document")
-        }
+    database_arguments = {
+        "database": request.form['database'],
+        "database-name": request.form['database-name'],
+        "mongo-collection": request.form['mongo-collection'],
+        "mongo-document": request.form['mongo-document']
+    }
 
-        for key, value in database_arguments.items():
-            if value == "None":
-                return "POST parameter " + key + " is missing"
+    for key, value in database_arguments.items():
+        if value == "None":
+            return "POST parameter " + key + " is missing"
 
-        if database_arguments["database_arg"] == "mongodb":
-            result = mongodb.append_to_collection(
-                database_arguments["database_name_arg"],
-                database_arguments["mongo_collection_arg"],
-                database_arguments["mongo_document_arg"]
-            )
-            return "{'result':" + str(result) + "}"
-        else:
-            return "{'result':'database not recognized'}"
+    if database_arguments["database"] == "mongodb":
+        result = mongodb.append_to_collection(
+            database_arguments["database-name"],
+            database_arguments["mongo-collection"],
+            database_arguments["mongo-document"]
+        )
+        return "{'result':"+str(result)+"}"
+    else:
+        return "{'result':'database not recognized'}"
 
 
-class Update(Resource):
-    @staticmethod
-    def post():
-        parser.add_argument('database', type=str, location='form')
-        parser.add_argument('database-name', type=str, location='form')
-        parser.add_argument('mongo-collection', type=str, location='form')
-        parser.add_argument('mongo-filter', type=str, location='form')
-        parser.add_argument('mongo-set-values', type=str, location='form')
-        args = parser.parse_args()
+@app.route('/update', methods=['POST'])
+def update():
+    if not is_authorized(request.remote_addr):
+        blacklist_ip(request.remote_addr)
+        return "Null"
 
-        database_arguments = {
-            "database_arg": args.get("database"),
-            "database_name_arg": args.get("database-name"),
-            "mongo_collection_arg": args.get("mongo-collection"),
-            "mongo_filter_arg": args.get("mongo-filter"),
-            "mongo_set_values_arg": args.get("mongo-set-values")
-        }
+    database_arguments = {
+        "database": request.form['database'],
+        "database-name": request.form['database-name'],
+        "mongo-collection": request.form['mongo-collection'],
+        "mongo-filter": request.form['mongo-filter'],
+        "mongo-set-values": request.form['mongo-set-values']
+    }
 
-        for key, value in database_arguments.items():
-            if value == "None":
-                return "POST parameter " + key + " is missing"
+    for key, value in database_arguments.items():
+        if value == "None":
+            return "POST parameter " + key + " is missing"
 
-        if database_arguments["database_arg"] == "mongodb":
-            result = mongodb.update_item_in_collection(
-                database_arguments["database_name_arg"],
-                database_arguments["mongo_collection_arg"],
-                database_arguments["mongo_filter_arg"],
-                database_arguments["mongo_set_values_arg"]
-            )
-            return "{'result':" + str(result) + "}"
-        else:
-            return "{'result':'database not recognized'}"
+    if database_arguments["database"] == "mongodb":
+        result = mongodb.update_item_in_collection(
+            database_arguments["database-name"],
+            database_arguments["mongo-collection"],
+            database_arguments["mongo-filter"],
+            database_arguments["mongo-set-values"]
+        )
+        return "{'result':"+str(result)+"}"
+    else:
+        return "{'result':'database not recognized'}"
 
 
-class Delete(Resource):
-    @staticmethod
-    def post():
-        parser.add_argument('filter', type=str, location='form')
-        args = parser.parse_args()
-        print(args)
-        return {"osef": "3000"}
+@app.route('/delete', methods=['POST'])
+def delete():
+    if not is_authorized(request.remote_addr):
+        blacklist_ip(request.remote_addr)
+        return "Null"
+
+    database_arguments = {
+        "database": request.form['database'],
+        "database-name": request.form['database-name'],
+        "mongo-collection": request.form['mongo-collection'],
+        "mongo-filter": request.form['mongo-filter']
+    }
+
+    for key, value in database_arguments.items():
+        if value == "None":
+            return "POST parameter " + key + " is missing"
+
+    if database_arguments["database"] == "mongodb":
+        result = mongodb.delete_item_in_collection(
+            database_arguments["database-name"],
+            database_arguments["mongo-collection"],
+            database_arguments["mongo-filter"]
+        )
+        return "{'result':" + str(result) + "}"
+    else:
+        return "{'result':'database not recognized'}"
 
 
-api.add_resource(FindOne, '/findone')
-api.add_resource(FindAll, '/findall')
-api.add_resource(Append, '/append')
-api.add_resource(Update, '/update')
-api.add_resource(Delete, '/delete')
-
-
-@app.route('/welcome')
-def hello():
+@app.route('/welcome', methods=['GET'])
+def welcome():
     return render_template('welcome.html')
 
 
