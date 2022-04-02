@@ -13,6 +13,17 @@ def is_database_exist(database_name):
     return False
 
 
+def exist_in_collection(database_name, collection_name, mongo_filter):
+    if not is_database_exist(database_name):
+        return "database dont exist"
+    else:
+        collection = client.get_database(database_name)[collection_name]
+        element = collection.find_one(json.loads(mongo_filter))
+        if element is None:
+            return False
+        return True
+
+
 def find_one_in_collection(database_name, collection_name, mongo_filter):
     if not is_database_exist(database_name):
         return "database dont exist"

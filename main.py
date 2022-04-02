@@ -6,6 +6,33 @@ from security.security import is_authorized
 app = Flask(__name__)
 
 
+@app.route('/exist', methods=['POST'])
+def exist():
+    if not is_authorized(request.remote_addr):
+        return "Null"
+
+    database_arguments = {
+        "database": request.form['database'],
+        "database-name": request.form['database-name'],
+        "mongo-collection": request.form['mongo-collection'],
+        "mongo-filter": request.form['mongo-filter']
+    }
+
+    for key, value in database_arguments.items():
+        if value == "None":
+            return "POST parameter " + key + " is missing"
+
+    if database_arguments["database"] == "mongodb":
+        result = mongodb.exist_in_collection(
+            database_arguments["database-name"],
+            database_arguments["mongo-collection"],
+            database_arguments["mongo-filter"]
+        )
+        return "{'result':"+str(result)+"}"
+    else:
+        return "{'result':'database not recognized'}"
+
+
 @app.route('/findone', methods=['POST'])
 def findone():
     if not is_authorized(request.remote_addr):
