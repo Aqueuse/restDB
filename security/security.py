@@ -1,4 +1,4 @@
-whitelist_ips = open("security/whitelist.csv").readline().split(",")
+whitelist_ips = open("security/whitelist.csv").readline().replace('\n', '').split(",")
 
 
 def is_authorized(unchecked_ip):
@@ -10,7 +10,7 @@ def is_authorized(unchecked_ip):
 
 
 def blacklist_ip(ip_to_blacklist):
-    blacklist_ips = set(open("security/blacklist.csv").readline().split(","))
+    blacklist_ips = set(open("security/blacklist.csv").readline().replace('\n', '').split(","))
     blacklist_ips.add(ip_to_blacklist)
 
     with open('security/blacklist.csv', "w") as blacklist_file:

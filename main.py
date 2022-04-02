@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 
 import databases.MongoDB as mongodb
-from security.security import is_authorized, blacklist_ip
+from security.security import is_authorized
 
 app = Flask(__name__)
 
