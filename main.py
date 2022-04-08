@@ -55,7 +55,7 @@ def findone():
             database_arguments["mongo-collection"],
             database_arguments["mongo-filter"]
         )
-        return "{\"result':\""+str(result).replace("\'", "\"")+"\"}"
+        return "{\"result\":\""+str(result).replace("\'", "\"")+"\"}"
     else:
         return "{\"result\":\"database not recognized\"}"
 
