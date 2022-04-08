@@ -29,7 +29,7 @@ def find_one_in_collection(database_name, collection_name, mongo_filter):
         return "database dont exist"
     else:
         collection = client.get_database(database_name)[collection_name]
-        element = collection.find_one(json.loads(mongo_filter))
+        element = collection.find_one(json.loads(mongo_filter), {'_id': False})
         return element
 
 
@@ -38,7 +38,7 @@ def find_all_in_collection(database_name, collection_name, mongo_filter):
         return "database dont exist"
     else:
         collection = client.get_database(database_name).get_collection(collection_name)
-        element = collection.find(json.loads(mongo_filter))
+        element = collection.find(json.loads(mongo_filter), {'_id': False})
         return element
 
 

@@ -28,9 +28,9 @@ def exist():
             database_arguments["mongo-collection"],
             database_arguments["mongo-filter"]
         )
-        return "{'result':'"+str(result)+"'}"
+        return "{\"result\":\""+str(result)+"\"}"
     else:
-        return "{'result':'database not recognized'}"
+        return "{\"result\":\"database not recognized\"}"
 
 
 @app.route('/findone', methods=['POST'])
@@ -55,9 +55,9 @@ def findone():
             database_arguments["mongo-collection"],
             database_arguments["mongo-filter"]
         )
-        return "{'result':'"+str(result)+"'}"
+        return "{\"result':\""+str(result)+"\"}"
     else:
-        return "{'result':'database not recognized'}"
+        return "{\"result\":\"database not recognized\"}"
 
 
 @app.route('/findall', methods=['POST'])
@@ -82,9 +82,9 @@ def findall():
             database_arguments["mongo-collection"],
             database_arguments["mongo-filter"]
         )
-        return "{'result':'"+str(result)+"'}"
+        return "{\"result\":\""+str(result)+"\"}"
     else:
-        return "{'result':'database not recognized'}"
+        return "{\"result\":\"database not recognized\"}"
 
 
 @app.route('/append', methods=['POST'])
@@ -109,9 +109,9 @@ def append():
             database_arguments["mongo-collection"],
             database_arguments["mongo-document"]
         )
-        return "{'result':'"+str(result)+"'}"
+        return "{\"result\":\""+str(result)+"\"}"
     else:
-        return "{'result':'database not recognized'}"
+        return "{\"result\":\"database not recognized\"}"
 
 
 @app.route('/update', methods=['POST'])
@@ -138,9 +138,9 @@ def update():
             database_arguments["mongo-filter"],
             database_arguments["mongo-set-values"]
         )
-        return "{'result':'"+str(result)+"'}"
+        return "{\"result\":\""+str(result)+"\"}"
     else:
-        return "{'result':'database not recognized'}"
+        return "{\"result\":\"database not recognized\"}"
 
 
 @app.route('/delete', methods=['POST'])
@@ -165,9 +165,9 @@ def delete():
             database_arguments["mongo-collection"],
             database_arguments["mongo-filter"]
         )
-        return "{'result':'" + str(result) + "'}"
+        return "{\"result\":" + str(result) + "}"
     else:
-        return "{'result':'database not recognized'}"
+        return "{\"result\":\"database not recognized\"}"
 
 
 @app.route('/welcome', methods=['GET'])
