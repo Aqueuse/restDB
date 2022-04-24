@@ -47,8 +47,8 @@ def append_to_collection(database_name, collection_name, collection_element):
         return "database dont exist"
     else:
         collection = client.get_database(database_name).get_collection(collection_name)
-        element_id = collection.insert_one(json.loads(collection_element))
-        return element_id
+        element = collection.insert_one(json.loads(collection_element))
+        return element.acknowledged
 
 
 def update_item_in_collection(database_name, collection_name, mongo_filter, mongo_values):
@@ -57,7 +57,7 @@ def update_item_in_collection(database_name, collection_name, mongo_filter, mong
     else:
         collection = client.get_database(database_name).get_collection(collection_name)
         element_id = collection.update_one(json.loads(mongo_filter), json.loads(mongo_values))
-        return element_id.raw_result
+        return element_id.acknowledged
 
 
 def delete_item_in_collection(database_name, collection_name, mongo_filter):
@@ -66,4 +66,4 @@ def delete_item_in_collection(database_name, collection_name, mongo_filter):
     else:
         collection = client.get_database(database_name).get_collection(collection_name)
         element_id = collection.delete_one(json.loads(mongo_filter))
-        return element_id.raw_result
+        return element_id.acknowledged

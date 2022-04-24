@@ -109,7 +109,8 @@ def append():
             database_arguments["mongo-collection"],
             database_arguments["mongo-document"]
         )
-        return "{\"result\":"+str(result)+"}"
+
+        return "{\"result\": \"" + str(result) + "\"}"
     else:
         return "{\"result\":\"database not recognized\"}"
 
@@ -138,7 +139,7 @@ def update():
             database_arguments["mongo-filter"],
             database_arguments["mongo-set-values"]
         )
-        return "{\"result\":\""+str(result)+"\"}"
+        return "{\"result\": \"" + str(result) + "\"}"
     else:
         return "{\"result\":\"database not recognized\"}"
 
@@ -165,7 +166,7 @@ def delete():
             database_arguments["mongo-collection"],
             database_arguments["mongo-filter"]
         )
-        return "{\"result\":" + str(result) + "}"
+        return "{\"result\": \"" + str(result) + "\"}"
     else:
         return "{\"result\":\"database not recognized\"}"
 
